@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<head>
+<title>Create Test</title>
+<meta charset = "utf-8">
+<script src="../static/js/jquery-3.2.1.slim.min.js"></script>
+<link rel="stylesheet" href="../static/css/timepicker.min.css" />
+<script src="../static/js/timepicker.min.js"></script>
+<link rel="stylesheet" href="../static/css/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-2/css/all.min.css">
+</head>
+<body>	
+<div class="home">
+	<div class="formbox2">
+			<form id="createtestform" action="/createtest" method="post" autocomplete="off">	
+				<h1>TEST DETAILS</h1>	
+				<br>	
+                <p id="errorMessage" class="error">{{error}}</p>	
+				{% if qno is not defined %}
+					<label>Test name 
+						<br>
+						<input id="testname" type="text" name="testname">			
+					</label><br><br>
+					<label>Enter Date of Test(DD:MM:YYYY)
+						<br>
+						<input id="date" type="date" name="date">			
+					</label><br><br>
+					<label>Enter Start Time
+						<br>
+						<!-- <input id="start" type="time" name="start"> -->	
+						<input id="start" name="start" type="text" class="bs-timepicker" />		
+					</label><br><br>
+					<label>Enter End Time
+						<br>
+						<input id="end" name="end" type="text" class="bs-timepicker" />			
+					</label><br><br>
+
+
+					<label> No of Questions 
+						<br>
+						<input id="name" type="number" name="qno">			
+					</label><br><br>
+					<input type="radio" id="randomize" name="randomize" value="randomize">
+					<label for="randomize">Randomize questions</label><br>
+					<input type="radio" id="select" name="select" value="select">
+					<label for="select">Select questions</label><br><br>
+					<button type="submit" name = 'createtest' value="createtest" class="btn">Create Test</button>	
+					<button type="submit" name = 'cancel' value="cancel" class="btn">Cancel</button>
+					<br><br>
+				{% endif %}
+				{% if qno is defined %}
+				<input type="hidden" id="qno" name="qno" value = "{{qno}}">
+				<input type="hidden" id="tname" name="tname" value = "{{testname}}">
+				<input type="hidden" id="st" name="st" value = "{{s}}">
+				<input type="hidden" id="dt" name="dt" value = "{{d}}">
+				<input type="hidden" id="et" name="et" value = "{{e}}">
+					{% set no = qno | int %}
+					{% set type = ['MCQ' , 'Fill in blanks','Match the following','Descriptive'] %}
+					{% for i in range(0,no) %}
+					{% set index = i | string %}
+					{% set selq = "question" + index %}
+					<label  for="{{selq}}">Select Question {{i+1}} :</label>
+					<br><br><select name="{{selq}}" id="{{selq}}">
+						{% for question in questions %}
+						{% set x = question["questionType"] | int %}
+								<option value = {{question["question_id"]}}>{{type[x]}} : {{question["questionTitle"]}}</option>
+						{% endfor %}
+					</select>
+					<br><br>
+					{% endfor %}
+					
+					<button type="submit" name = 'createtest2' value="createtest2" class="btn">Create Test</button>
+				{% endif %}  
+				 
+		</form>
+	</div>
+</div>
+<script>
+$(function () {
+		  $('.bs-timepicker').timepicker();
+		});
+</script>
+</body>
+</html>
